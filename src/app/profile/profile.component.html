@@ -1,0 +1,70 @@
+<div class="d-flex-column" *ngIf="profile.html_url">
+  <div class="container">
+    <div class="row justify-content-between">
+      <div class="col-12 col-md-12">
+        <div class="d-flex justify-content-between align-items-start mt-5">
+          <div class="repo-search flex-grow-1">
+            <mat-form-field class="w-50">
+              <mat-label>Search for a Repo</mat-label>
+              <input type="text"
+                     placeholder="Repository name"
+                     matInput
+                     [matAutocomplete]="auto"
+                     [formControl]="searchControl">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let repo of filteredRepoNames | async" [value]="repo">{{repo}}</mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+          <div class="profile w-50 d-flex justify-content-between align-items-center">
+            <span *ngIf="profile.avatar_url != null" class="profile-avatar me-2">
+              <img [src]="profile.avatar_url" class="rounded-circle" style="height: 50px; width: 50px">
+            </span>
+            <span class="me-2">
+              <a *ngIf="profile.twitter_username != null; else githuburl" [href]="'https://x.com/' + profile.twitter_username" target="_blank">{{ profile.name }}</a>
+            </span>
+            <ng-template #githuburl>
+              <span class="me-2">
+                <a [href]="profile.html_url" target="_blank">{{ profile.name }}</a>
+              </span>
+            </ng-template>
+            <span class="me-2">Followers: {{ profile.followers }}</span>
+            <span class="me-2">Following: {{ profile.following }}</span>
+            <span> {{ profile.location }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div *ngFor="let repo of filteredRepos | async" class="col-md-3 mb-4">
+        <div class="card h-100">
+          <div class="card-header">
+            <h3 class="text-center">
+              <a [href]="repo.html_url" target="_blank">{{ repo.name }}</a>
+            </h3>
+          </div>
+          <div class="card-body">
+            <p *ngIf="repo.description != null"><strong>Description:</strong> {{ repo.description }}</p>
+            <p *ngIf="repo.language != null"><strong>Languages:</strong> {{ repo.language }}</p>
+            <p *ngIf="repo.created_at != null"><strong>Created At:</strong> {{ repo.created_at | date }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <nav>
+          <ul class="pagination justify-content-center">
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <a class="page-link" (click)="changePage(currentPage - 1)">Previous</a>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <a class="page-link" (click)="changePage(currentPage + 1)">Next</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

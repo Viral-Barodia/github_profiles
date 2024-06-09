@@ -1,0 +1,15 @@
+<div class="header">
+  <div class="container-fluid d-flex align-items-center justify-content-center mx-0">
+    <div class="input-box text-center">
+      <mat-form-field class="example-form-field mt-5">
+        <mat-label class="text-center">GitHub username</mat-label>
+        <input matInput type="text" [(ngModel)]="searchTerm" (keydown.enter)="onSearch()">
+        <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="searchTerm=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<!-- https://api.github.com/search/users?q=viral -->
