@@ -7,5 +7,4 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'github_profiles';
-  static PAGINATION_OPTIONS: any;
 }
