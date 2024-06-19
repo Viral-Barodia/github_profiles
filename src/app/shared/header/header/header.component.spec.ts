@@ -11,6 +11,7 @@ describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
   let activatedRoute: ActivatedRoute;
   let router: Router;
+  let routerNavigateByUrlSpy: jasmine.Spy;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -25,10 +26,24 @@ describe('HeaderComponent', () => {
     component = fixture.componentInstance;
     activatedRoute = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(Router);
+    routerNavigateByUrlSpy = spyOn(router, 'navigateByUrl');
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call navigateByUrl with the correct URL on search', () => {
+    component.searchTerm = 'testUser';
+    component.onSearch();
+
+    const urlTree = router.createUrlTree([], {
+      queryParams: { username: 'testUser' },
+      queryParamsHandling: 'merge',
+      preserveFragment: true
+    });
+
+    expect(routerNavigateByUrlSpy).toHaveBeenCalledWith(urlTree);
   });
 });

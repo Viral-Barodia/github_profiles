@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FetchServiceService } from '../shared/fetch-service.service';
 import { GithubUserProfile, Repository } from '../_core/profile.model';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -14,6 +14,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
+  @ViewChild('scrollTarget') scrollTarget: ElementRef;
+  
   constructor(
     private fetchService: FetchServiceService,
     private spinner: NgxSpinnerService,
@@ -29,6 +31,7 @@ export class ProfileComponent implements OnInit {
   filteredRepos: Observable<Repository[]>;
   currentPage = AppConstants.PAGINATION_OPTIONS.PAGE;
   itemsPerPage = AppConstants.PAGINATION_OPTIONS.ITEMS_PER_PAGE;
+  
 
   ngOnInit() {
     this.fetchService.currentUsername.subscribe((response: string) => {
@@ -43,7 +46,7 @@ export class ProfileComponent implements OnInit {
       startWith(''),
       map(value => value || '')
     ).subscribe(value => {
-      this.currentPage = 1; // Reset to first page on new search
+      this.currentPage = 1;
       this.filteredRepos = of(this._filterRepos(value));
     });
 
@@ -73,7 +76,7 @@ export class ProfileComponent implements OnInit {
     this.fetchService.fetchRepos(this.username).subscribe((response: Repository[]) => {
       this.allRepos = response;
       this.repoNames = response.map(repo => repo.name);
-      this.currentPage = 1; // Reset to first page after fetching new repos
+      this.currentPage = 1;
       this.filteredRepos = of(this._filterRepos(this.searchControl.value || ''));
       this.spinner.hide();
     }, (error) => {
@@ -106,6 +109,9 @@ export class ProfileComponent implements OnInit {
     this.currentPage = page;
     const searchValue = this.searchControl.value || '';
     this.filteredRepos = of(this._filterRepos(searchValue));
+    if (this.scrollTarget) {
+      this.scrollTarget.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   get totalPages(): number {

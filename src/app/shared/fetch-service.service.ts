@@ -18,10 +18,7 @@ export class FetchServiceService {
 
 
   fetchUsersInfo(search_string: string): Observable<GithubUserProfile> {
-    const headers = new HttpHeaders({
-      'Authorization': `token ${environment.githubPAT}`
-    });
-    return this.http.get<GithubUserProfile>(`${environment.githubUsersApi}${search_string}`, { headers });
+    return this.http.get<GithubUserProfile>(`${environment.githubUsersApi}${search_string}`);
   }
 
   changeUsername(username: string){
@@ -29,9 +26,6 @@ export class FetchServiceService {
   }
 
   fetchRepos(username: string){
-    const headers = new HttpHeaders({
-      'Authorization': `token ${environment.githubPAT}`
-    });
-    return this.http.get(`${environment.reposAPI}${username}/repos`, { headers });
+    return this.http.get(`${environment.reposAPI}${username}/repos`);
   }
 }
